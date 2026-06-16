@@ -1,5 +1,5 @@
 <?php
-
+require_once 'functions.php';
 // validation
 if (empty($_POST['title'])) {
     echo ('タイトルは必須です');
@@ -36,24 +36,19 @@ if (!preg_match('/\A[[:^cntrl:]]{0,80}\z/u', $_POST['author'])) {
 }
 
 try {
-    $user = "localhost";
-    $password = "satomitest";
+    // 下記部分をfunctions.phpのdb_open関数に置き換え
+    $dbh = db_open();
+    // $user = "localhost";
+    // $password = "satomitest";
 
-    $opt = [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_EMULATE_PREPARES => false,
-        PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
-    ];
+    // $opt = [
+    //     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    //     PDO::ATTR_EMULATE_PREPARES => false,
+    //     PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+    // ];
+    // $dbh = new PDO('mysql:host=localhost;dbname=sample_db', $user, $password, $opt);
 
-    $opt = [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_EMULATE_PREPARES => false,
-        PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
-    ];
-    $dbh = new PDO('mysql:host=localhost;dbname=sample_db', $user, $password, $opt);
-
-    // プレースホルダの作成
-    $sql = "INSERT INTO books (id, title, isbn, price, publish, author) VALUES (NULL, :title, :isbn, :price, :publish, :author)";
+    $sql = "INSERT INTO books (id, title, isbn, price, publish, author) VALUES (:id, :title, :isbn, :price, :publish, :author)";
     //SQL実行時 (プレースホルダのまま実行)
     $stmt = $dbh->prepare($sql);
     // プレースホルダーの値の置き換え
